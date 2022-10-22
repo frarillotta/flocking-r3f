@@ -48,19 +48,11 @@ export class Boid {
       );
       this.ref.quaternion.setFromRotationMatrix(matrix);
       this.ref.rotateZ(degToRad270);
-      // this.ref.rotateY(MathUtils.degToRad(0));
       this.ref.position.add(this.velocity);
-      // this.ref.remove(...this.ref.children.filter((c) => (c instanceof THREE.Line)));
-      // const geometry = new THREE.BufferGeometry().setFromPoints([this.position, this.velocity  ]);
-      // const material = new THREE.LineBasicMaterial({color: 'black'})
-      // const line = new THREE.Line(geometry, material);
-  
-      // this.ref.add(line);
   
       this.acceleration.multiplyScalar(0);
     }
   
-    // should we put this in a web worker?
     calculateSteeringForces(boids) {
     
       const separation = new THREE.Vector3(0, 0 ,0);
@@ -87,7 +79,7 @@ export class Boid {
           }
   
           if (d > 0 && d < this.alignmentPerception) {
-            alignment.add(boids[i].velocity);
+            alignment.add(boids[i].velocity ?? new THREE.Vector3());
             alignmentCount++;
           }
   
@@ -137,9 +129,10 @@ export class Boid {
       return separation.add(alignment).add(cohesion);
   
     }
-    flock(boids) {
+    flock(boids, playerRef) {
   
       const steering = this.calculateSteeringForces(boids);
+      const playerSteering = this.calculateSteeringForces([playerRef.current]);
       const boundary = this.boundaryCollision();
       const collision = this.collision(this.ref.airshipRefs.current);
       const groundAvoidance = this.groundAvoidance();
@@ -149,6 +142,7 @@ export class Boid {
   
       this.acceleration
         .add(steering)
+        .add(playerSteering)
         .add(boundary)
       
       // Preferentially move in x/z dimension

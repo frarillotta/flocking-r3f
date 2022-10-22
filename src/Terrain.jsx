@@ -19,17 +19,9 @@ export function Terrain() {
     const terrainRef = useRef();
     
     return <mesh 
-        castShadow={true} 
-        receiveShadow={true} 
         ref={terrainRef} 
         rotation={[Math.PI / 2, Math.PI, 0]} 
-        position={TERRAIN_POSITION}
-        // customDepthMaterial={new MeshDepthMaterial( {
-        //     depthPacking: RGBADepthPacking,
-        //     displacementMap: fbmTexture,
-        //     displacementScale: 100,
-
-        // })}
+        position={TERRAIN_POSITION} 
     >
         <planeGeometry args={[TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_RESOLUTION, TERRAIN_RESOLUTION]} />
         <meshStandardMaterial name='terrainMaterial' displacementMap={fbmTexture} displacementScale={250} normalMap={fbmNormalTexture} normalScale={250} color={new Color('#42db40')} />

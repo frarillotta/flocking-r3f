@@ -8,21 +8,11 @@ const _NUM_BOIDS = 500;
 
 const boids = new Array(_NUM_BOIDS).fill(null).map(() => new Boid());
 
-
-// const Bird = () => {
-//   console.log({nodes, materials})
-//   return <group rotation={[0, 0, -Math.PI / 2]}>
-//     <mesh geometry={nodes.Cylinder_1.geometry} material={materials['Material.001']} />
-//     <mesh geometry={nodes.Cylinder_2.geometry} material={materials['Material.002']} />
-//   </group>
-
-// }
-
-export function Flock({ airships }) {
+export function Flock({ airships, player }) {
   useFrame(() => {
     let i = boids.length;
     while (i--) {
-      boids[i].flock(boids);
+      boids[i].flock(boids, player);
       boids[i].update();
     }
   });
@@ -40,10 +30,8 @@ export function Flock({ airships }) {
         {boids.map(({ position, velocity }, i) => (
             <Instance
               scale={[.15, .15, .15]}
-              // rotation={[MathUtils.degToRad(180), MathUtils.degToRad(90) ,MathUtils.degToRad(90)]}
               position={[position.x, position.y, position.z]}
               rotation={[MathUtils.degToRad(180), MathUtils.degToRad(90) ,MathUtils.degToRad(90)]}
-
               velocity={velocity}
               ref={(el) => {
                 boids[i].ref = el;

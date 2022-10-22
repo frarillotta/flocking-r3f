@@ -188,14 +188,6 @@ class OutlinesAndHatchingEffect extends Effect {
 
 const PostEffect = forwardRef((_, ref) => {
   const { scene, camera } = useThree();
-  // useEffect(() => {
-  //   scene.traverse((obj) => {
-  //     if (obj.material?.name === 'terrainMaterial') {
-  //       console.log(obj.material.displacementMap)
-  //       obj.material.needsUpdate = true;
-  //     }
-  //   })
-  // })
 
   const effect = useMemo(() => new OutlinesAndHatchingEffect(scene, camera), [])
   return <primitive ref={ref} object={effect} />

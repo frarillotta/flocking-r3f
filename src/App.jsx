@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
-import {
-  Environment} from "@react-three/drei";
+import { Stats } from "@react-three/drei";
 import {Color} from "three";
 import { Flock } from "./Flock";
 import { Terrain } from "./Terrain";
@@ -30,9 +29,10 @@ function SceneElements() {
           el.AABB = boundingBox;
           airshipRefs.current[i] = el
         }} position={[
-          THREE.MathUtils.randInt(-AIRSHIPS_COUNT * 10 * (i + 1), AIRSHIPS_COUNT * 10 * (i + 1)),
+          //distribute them in circles as to avoid collision - i hope that works
+          Math.cos(Math.random() * Math.PI * 2) * ((i + 1) * 80),
           THREE.MathUtils.randInt(100, 200),
-          THREE.MathUtils.randInt(-AIRSHIPS_COUNT * 10 * (i + 1), AIRSHIPS_COUNT * 10 * (i + 1))
+          Math.sin(Math.random() * Math.PI * 2) * ((i + 1) * 80),
         ]}
           rotation-y={THREE.MathUtils.degToRad(THREE.MathUtils.randInt(0, 360))}
         />
@@ -50,17 +50,18 @@ export default function App() {
           shadows={true}
 
         >
+        <Stats />
           {/* <OrbitControls
             enableDamping={true}
             enablePan={false}
             enableRotate={true}
             enableZoom={false}
           /> */}
-          {/* <ambientLight intensity={0.35} /> */}
-          {/* <spotLight  shadow-mapSize-width={2048} shadow-mapSize-height={2048} shadow-bias={-0.00001} castShadow={true}  position={[2000, 50, 2000]} intensity={1} /> */}
-          {/* <directionalLight castShadow={true} position={[-2000, 40, -2000]} intensity={0.3}/> */}
+          <ambientLight intensity={0.35} />
+          <spotLight  position={[2000, 50, 2000]} intensity={1}/>
+          <directionalLight position={[-2000, 40, -2000]} intensity={0.4}/>
           <Suspense fallback={null}>
-            <Environment preset="park"/>
+            {/* <Environment preset="park"/> */}
             <PostEffects />
             <SceneElements />
             <Clouds />

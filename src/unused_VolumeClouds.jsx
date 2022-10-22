@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import { Group, Texture, MathUtils } from 'three'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Billboard, Plane, useTexture } from '@react-three/drei'
+import { MathUtils } from 'three'
+import { useFrame } from '@react-three/fiber'
 import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js';
 import * as THREE from 'three';
 
+// this doesn't really work and it's quite expensive on the GPU. but the code isn't too bad
 
 // Texture
 const size = 128;

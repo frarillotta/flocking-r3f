@@ -3,6 +3,11 @@ import {Vector3, Mesh, Color} from 'three';
 import { useRef } from "react";
 import glsl from 'babel-plugin-glsl/macro'
 
+/** opted for using a displaced texture instead, 
+    but this isn't too bad especially given im calculating the normals by myself, 
+    which i spent a shitload of time on
+*/
+
 export const TERRAIN_POSITION = new Vector3(0, 10, 0)
 const TERRAIN_SIZE = 2000;
 const TERRAIN_RESOLUTION = 2000;

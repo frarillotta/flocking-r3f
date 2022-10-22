@@ -87,7 +87,7 @@ export const Player = forwardRef((_, ref) => {
         0.4
       );
     }
-    if (controls.current.stop) {
+    if (!controls.current.stop) {
       // forward movement
       const worldDirection = new Vector3();
       ref.current.getWorldDirection(worldDirection);
@@ -105,7 +105,7 @@ export const Player = forwardRef((_, ref) => {
         return t * t
       }}
     >
-      <group castShadow={true} receiveShadow={true} ref={ref} position={[0, 100, 0]} dispose={null}>
+      <group ref={ref} position={[0, 100, 0]} dispose={null}>
         <mesh geometry={nodes.Sphere002.geometry} material={materials.glass} />
         <mesh geometry={nodes.Sphere002_1.geometry} material={materials.base} />
         <mesh geometry={nodes.Sphere002_2.geometry} material={materials.wings} />

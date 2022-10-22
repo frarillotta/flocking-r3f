@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
 import { Stats } from "@react-three/drei";
@@ -43,33 +42,29 @@ function SceneElements() {
 
 export default function App() {
   return (
-    <>
-      <CanvasWrapper>
-        <Canvas
-          camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
-          shadows={true}
+    <Canvas
+      camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
+      shadows={true}
 
-        >
-        <Stats />
-          {/* <OrbitControls
-            enableDamping={true}
-            enablePan={false}
-            enableRotate={true}
-            enableZoom={false}
-          /> */}
-          <ambientLight intensity={0.35} />
-          <spotLight  position={[2000, 50, 2000]} intensity={1}/>
-          <directionalLight position={[-2000, 40, -2000]} intensity={0.4}/>
-          <Suspense fallback={null}>
-            {/* <Environment preset="park"/> */}
-            <PostEffects />
-            <SceneElements />
-            <Clouds />
-          </Suspense>
+    >
+    <Stats />
+      {/* <OrbitControls
+        enableDamping={true}
+        enablePan={false}
+        enableRotate={true}
+        enableZoom={false}
+      /> */}
+      <ambientLight intensity={0.35} />
+      <spotLight  position={[2000, 50, 2000]} intensity={1}/>
+      <directionalLight position={[-2000, 40, -2000]} intensity={0.4}/>
+      <Suspense fallback={null}>
+        {/* <Environment preset="park"/> */}
+        <PostEffects />
+        <SceneElements />
+        <Clouds />
+      </Suspense>
 
-        </Canvas>
-      </CanvasWrapper>
-    </>
+    </Canvas>
   );
 }
 
@@ -84,9 +79,3 @@ const PostEffects = () => {
     <OutlinesAndHatchingEffect scene={scene} camera={camera} />
   </EffectComposer>
 }
-
-const CanvasWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;

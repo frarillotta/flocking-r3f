@@ -18,7 +18,7 @@ export class Boid {
   
       this.maxSpeed = 2;
       this.maxForce = 0.04;
-      this.safeDistance = 40;
+      this.safeDistance = 80;
   
       this.cohesionPerception = 25;
       this.separationPerception = 15;
@@ -273,7 +273,8 @@ export class Boid {
       const force = new THREE.Vector3(0, 0, 0);
   
       for (const c of colliders) {
-        if (this.position.distanceTo(c.position) > this.collisionSafeDistance) {
+        const dist = this.position.distanceTo(c.position)
+        if (dist > this.collisionSafeDistance) {
           continue;
         }
         
@@ -281,7 +282,7 @@ export class Boid {
         if (result) {
           const dirToCenter = c.position.clone().sub(this.position).normalize();
           const dirToCollision = result.clone().sub(this.position).normalize();
-          const steeringDirection = dirToCollision.sub(dirToCenter).normalize();
+          const steeringDirection = dirToCollision.sub(dirToCenter).normalize().multiplyScalar(1/dist);
           force.add(steeringDirection);
         }
       }

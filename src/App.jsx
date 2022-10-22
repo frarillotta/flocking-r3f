@@ -54,9 +54,9 @@ export default function App() {
         enableRotate={true}
         enableZoom={false}
       /> */}
-      <ambientLight intensity={0.35} />
-      <spotLight  position={[2000, 50, 2000]} intensity={1}/>
-      <directionalLight position={[-2000, 40, -2000]} intensity={0.4}/>
+      <ambientLight intensity={0.5} />
+      <spotLight  position={[2000, 200, 2000]} intensity={2}/>
+      <directionalLight position={[-2000, 100, -2000]} intensity={1}/>
       <Suspense fallback={null}>
         {/* <Environment preset="park"/> */}
         <PostEffects />

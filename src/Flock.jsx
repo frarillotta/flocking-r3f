@@ -4,7 +4,11 @@ import { Instances, Instance } from "@react-three/drei";
 import { Boid } from "./Boid";
 import { useGLTF } from '@react-three/drei'
 import { MathUtils } from "three";
-const _NUM_BOIDS = 500;
+let _NUM_BOIDS = 600;
+
+if(window.innerWidth < 500) {
+  _NUM_BOIDS = 250
+}
 
 const boids = new Array(_NUM_BOIDS).fill(null).map(() => new Boid());
 

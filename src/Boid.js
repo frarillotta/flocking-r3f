@@ -27,6 +27,10 @@ export class Boid {
       this.alignmentStrength = 1;
       this.separationStrength = 2;
       this.collisionSafeDistance = 160;
+      this.boundary = 500;
+      if (window.innerWidth < 500) {
+        this.boundary = 250;
+      }
     }
   
   
@@ -289,9 +293,9 @@ export class Boid {
       return force;
     }
     
-    boundaryCollision(radius = 400) {
+    boundaryCollision() {
   
-      const distance = radius - this.position.length() - 1;
+      const distance = this.boundary - this.position.length() - 1;
   
       const steerVector = this.position.clone();
       steerVector.normalize();

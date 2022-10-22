@@ -11,7 +11,11 @@ import { Player } from './Player';
 import * as THREE from 'three';
 import { Airship } from './Airship';
 
-const AIRSHIPS_COUNT = 30
+let AIRSHIPS_COUNT = 30
+
+if(window.innerWidth < 500) {
+  AIRSHIPS_COUNT = 20
+}
 function SceneElements() {
   const playerRef = useRef();
   const airshipRefs = useRef([]);

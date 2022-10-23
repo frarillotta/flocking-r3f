@@ -46,29 +46,32 @@ function SceneElements() {
 
 export default function App() {
   return (
-    <Canvas
-      camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
-      shadows={true}
+    <>    
+      <Canvas
+        camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
+        shadows={true}
+        dpr={1}
+      >
+      <Stats />
+        {/* <OrbitControls
+          enableDamping={true}
+          enablePan={false}
+          enableRotate={true}
+          enableZoom={false}
+        /> */}
+        <ambientLight intensity={0.5} />
+        <spotLight  position={[2000, 200, 2000]} intensity={2}/>
+        <directionalLight position={[-2000, 100, -2000]} intensity={1}/>
+        <Suspense fallback={null}>
+          {/* <Environment preset="park"/> */}
+          <PostEffects />
+          <SceneElements />
+          <Clouds />
+        </Suspense>
 
-    >
-    <Stats />
-      {/* <OrbitControls
-        enableDamping={true}
-        enablePan={false}
-        enableRotate={true}
-        enableZoom={false}
-      /> */}
-      <ambientLight intensity={0.5} />
-      <spotLight  position={[2000, 200, 2000]} intensity={2}/>
-      <directionalLight position={[-2000, 100, -2000]} intensity={1}/>
-      <Suspense fallback={null}>
-        {/* <Environment preset="park"/> */}
-        <PostEffects />
-        <SceneElements />
-        <Clouds />
-      </Suspense>
+      </Canvas>
+    </>
 
-    </Canvas>
   );
 }
 

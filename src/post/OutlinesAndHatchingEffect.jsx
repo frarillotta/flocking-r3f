@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo } from 'react'
-import { Effect, RenderPass, NormalPass } from 'postprocessing';
+import { Effect, RenderPass } from 'postprocessing';
 import {
     Uniform,
     WebGLRenderTarget,
@@ -17,7 +17,7 @@ const fragmentShader = `
   precision highp float;
   
   uniform sampler2D colorTexture;
-  uniform sampler2D normalTexture;
+  // uniform sampler2D normalTexture;
   uniform float scale;
   uniform float thickness;
   uniform float angle;
@@ -148,7 +148,7 @@ class OutlinesAndHatchingEffect extends Effect {
         super('OutlinesAndHatchingEffect', fragmentShader, {
             uniforms: new Map([
                 ['colorTexture', new Uniform(null)],
-                ['normalTexture', new Uniform(null)],
+                // ['normalTexture', new Uniform(null)],
                 ['scale', new Uniform(1)],
                 ['thickness', new Uniform(1)],
                 ['angle', new Uniform(2)],
@@ -158,9 +158,9 @@ class OutlinesAndHatchingEffect extends Effect {
 
 
         this.colorPass = new RenderPass(scene, camera);
-        this.normalPass = new NormalPass(scene, camera);
+        // this.normalPass = new NormalPass(scene, camera);
 
-        this.uniforms.get('normalTexture').value = this.normalPass.renderTarget.texture;
+        // this.uniforms.get('normalTexture').value = this.normalPass.renderTarget.texture;
 
         this.renderTarget = new WebGLRenderTarget(1, 1);
         this.uniforms.get('colorTexture').value = this.renderTarget.texture;
@@ -175,12 +175,12 @@ class OutlinesAndHatchingEffect extends Effect {
     
     setSize(w, h) {
         this.colorPass.setSize(w, h);
-        this.normalPass.setSize(w, h);
+        // this.normalPass.setSize(w, h);
         this.renderTarget.setSize(w, h);
     }
 
     update(renderer) {
-        this.normalPass.render(renderer, null, this.renderTarget);
+        // this.normalPass.render(renderer, null, this.renderTarget);
         this.colorPass.render(renderer, this.renderTarget, this.renderTarget)
     }
 

@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
-import React from "react";
-import { Instances, Instance } from "@react-three/drei";
+import React, { useEffect } from "react";
+import { Instances, Instance, useAnimations } from "@react-three/drei";
 import { Boid } from "./Boid";
 import { useGLTF } from '@react-three/drei'
 import { MathUtils } from "three";
@@ -20,16 +20,25 @@ export function Flock({ airships, player }) {
       boids[i].update();
     }
   });
-  const { nodes, materials } = useGLTF('/bird.glb')
+  const { nodes, materials, animations } = useGLTF('/bird.glb');
+
+  const {ref, actions, names} = useAnimations(animations);
+
+  useEffect(( )=> {
+    actions[names[0]].play();
+  });
 
   return (
     <group>
       <Instances
+        ref={ref}
         limit={_NUM_BOIDS}
         range={_NUM_BOIDS}
         args={[null, null, _NUM_BOIDS]}
         geometry={nodes.Cylinder.geometry}
         material={materials['Material.001']}
+        morphTargetDictionary={nodes.Cylinder.morphTargetDictionary}
+        morphTargetInfluences={nodes.Cylinder.morphTargetInfluences}
       >
         {boids.map(({ position, velocity }, i) => (
             <Instance

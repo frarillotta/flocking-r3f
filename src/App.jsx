@@ -33,9 +33,9 @@ function SceneElements() {
           airshipRefs.current[i] = el
         }} position={[
           //distribute them in circles as to avoid collision - i hope that works
-          Math.cos(Math.random() * Math.PI * 2) * ((i + 1) * 80),
+          Math.cos(Math.random() * Math.PI * 2) * ((i + 2) * 80),
           THREE.MathUtils.randInt(100, 200),
-          Math.sin(Math.random() * Math.PI * 2) * ((i + 1) * 80),
+          Math.sin(Math.random() * Math.PI * 2) * ((i + 2) * 80),
         ]}
           rotation-y={THREE.MathUtils.degToRad(THREE.MathUtils.randInt(0, 360))}
         />
@@ -49,7 +49,6 @@ export default function App() {
     <>    
       <Canvas
         camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
-        shadows={true}
         dpr={1}
       >
       <Stats />
@@ -77,12 +76,11 @@ export default function App() {
 
 const PostEffects = () => {
 
-  const { scene, camera } = useThree(({scene, camera}) => {
+  useThree(({scene, camera}) => {
     scene.background = new Color('#89bff5');
-    return {scene, camera};
   });
 
   return <EffectComposer>
-    <OutlinesAndHatchingEffect scene={scene} camera={camera} />
+    <OutlinesAndHatchingEffect />
   </EffectComposer>
 }

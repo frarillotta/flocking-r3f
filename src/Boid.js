@@ -27,7 +27,7 @@ export class Boid {
       this.alignmentStrength = 1;
       this.separationStrength = 2;
       this.collisionSafeDistance = 160;
-      this.boundary = 500;
+      this.boundary = 400;
       if (window.innerWidth < 500) {
         this.boundary = 250;
       }

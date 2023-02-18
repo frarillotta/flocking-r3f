@@ -1,10 +1,13 @@
-import React, { forwardRef, useMemo } from 'react'
-import { Effect, RenderPass } from 'postprocessing';
+import React, {  useMemo } from 'react'
+import { Effect, RenderPass, NormalPass } from 'postprocessing';
 import {
     Uniform,
     WebGLRenderTarget,
     TextureLoader,
-    RepeatWrapping
+    RepeatWrapping,
+    RGBAFormat,
+    HalfFloatType,
+    NearestFilter 
   } from "three";
   import { shader as sobel } from "./shaders/sobel.js";
   import { shader as aastep } from "./shaders/aastep.js";
@@ -17,7 +20,7 @@ const fragmentShader = `
   precision highp float;
   
   uniform sampler2D colorTexture;
-  // uniform sampler2D normalTexture;
+  uniform sampler2D normalTexture;
   uniform float scale;
   uniform float thickness;
   uniform float angle;
@@ -124,10 +127,11 @@ const fragmentShader = `
     float ss = scale * 1.;
     
     // do we want to color the edges?
-    float colorEdge = length(sobel(colorTexture, lUv, size, thickness)) * 2.;
+    float colorEdge = length(sobel(normalTexture, lUv, size, thickness)) * 2.;
     colorEdge = aastep(.5, colorEdge);
     c += colorEdge;
     col = clamp(col * 2., 0., 1.);
+    col += c;
     hatch = 1. - hatch;
   
     vec4 paper = texture(paperTexture, .00025 * vUv*size);
@@ -139,6 +143,7 @@ const fragmentShader = `
     outputColor.rgb = blendDarken(outputColor.rgb, coltex, hatch);
     outputColor.rgb = mix(outputColor.rgb, coltex, 0.4);
     // outputColor.rgb = texture(normalTexture, vUv).rgb;
+    // outputColor.rgb = vec3(colorEdge);
     outputColor.a = 1.;
   }
 `;
@@ -148,7 +153,7 @@ class OutlinesAndHatchingEffect extends Effect {
         super('OutlinesAndHatchingEffect', fragmentShader, {
             uniforms: new Map([
                 ['colorTexture', new Uniform(null)],
-                // ['normalTexture', new Uniform(null)],
+                ['normalTexture', new Uniform(null)],
                 ['scale', new Uniform(1)],
                 ['thickness', new Uniform(1)],
                 ['angle', new Uniform(2)],
@@ -157,12 +162,20 @@ class OutlinesAndHatchingEffect extends Effect {
         });
 
 
+        this.camera = camera;
         this.colorPass = new RenderPass(scene, camera);
-        // this.normalPass = new NormalPass(scene, camera);
+        
+        this.normalPass = new NormalPass(scene, camera);
+        this.normalPass.depthBuffer = false;
 
-        // this.uniforms.get('normalTexture').value = this.normalPass.renderTarget.texture;
+        this.uniforms.get('normalTexture').value = this.normalPass.renderTarget.texture;
 
         this.renderTarget = new WebGLRenderTarget(1, 1);
+        this.renderTarget.texture.format = RGBAFormat;
+        this.renderTarget.texture.type = HalfFloatType;
+        this.renderTarget.texture.minFilter = NearestFilter;
+        this.renderTarget.texture.magFilter = NearestFilter;
+        this.renderTarget.texture.generateMipmaps = false;
         this.uniforms.get('colorTexture').value = this.renderTarget.texture;
 
         
@@ -175,22 +188,24 @@ class OutlinesAndHatchingEffect extends Effect {
     
     setSize(w, h) {
         this.colorPass.setSize(w, h);
-        // this.normalPass.setSize(w, h);
+        this.normalPass.setSize(w, h);
         this.renderTarget.setSize(w, h);
     }
 
     update(renderer) {
-        // this.normalPass.render(renderer, null, this.renderTarget);
+        this.camera.layers.disable(1)
+        this.normalPass.render(renderer, null, this.renderTarget);
+        this.camera.layers.enable(1)
         this.colorPass.render(renderer, this.renderTarget, this.renderTarget)
     }
 
 }
 
-const PostEffect = forwardRef((_, ref) => {
+const PostEffect = () => {
   const { scene, camera } = useThree();
 
   const effect = useMemo(() => new OutlinesAndHatchingEffect(scene, camera), [])
-  return <primitive ref={ref} object={effect} />
-})
+  return <primitive object={effect} />
+}
 
 export default PostEffect

@@ -22,6 +22,7 @@ export function Terrain() {
         ref={terrainRef} 
         rotation={[Math.PI / 2, Math.PI, 0]} 
         position={TERRAIN_POSITION} 
+        layers={1}
     >
         <planeGeometry args={[TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_RESOLUTION, TERRAIN_RESOLUTION]} />
         <meshStandardMaterial name='terrainMaterial' displacementMap={fbmTexture} displacementScale={250} normalMap={fbmNormalTexture} normalScale={250} color={new Color('#42db40')} />

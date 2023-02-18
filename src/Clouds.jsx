@@ -37,7 +37,7 @@ const Billboard = (props) => {
     
       // always face the camera unless it's too close
       if (camera.position.distanceTo(localRef.current.position) > 100) {
-        localRef.current.quaternion.copy(camera.quaternion)
+        localRef.current.lookAt(camera.position)
       }
     })
     return <group ref={localRef} {...props} />
@@ -60,6 +60,8 @@ export function Clouds() {
                     MathUtils.randFloat(CLOUD_HORIZONTAL_POSITION.min, CLOUD_HORIZONTAL_POSITION.max),
                 ]}>
                 <Image 
+                    // frustumCulled={false}
+                    layers={1}
                     url={'/cloud.png'} 
                     transparent={true}
                 />

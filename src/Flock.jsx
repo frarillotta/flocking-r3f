@@ -4,7 +4,7 @@ import { Instances, Instance, useAnimations } from "@react-three/drei";
 import { Boid } from "./Boid";
 import { useGLTF } from '@react-three/drei'
 import { MathUtils } from "three";
-let _NUM_BOIDS = 600;
+let _NUM_BOIDS = 700;
 
 if(window.innerWidth < 500) {
   _NUM_BOIDS = 250
@@ -12,11 +12,11 @@ if(window.innerWidth < 500) {
 
 const boids = new Array(_NUM_BOIDS).fill(null).map(() => new Boid());
 
-export function Flock({ airships, player }) {
+export function Flock() {
   useFrame(() => {
     let i = boids.length;
     while (i--) {
-      boids[i].flock(boids, player);
+      boids[i].flock(boids);
       boids[i].update();
     }
   });
@@ -49,7 +49,6 @@ export function Flock({ airships, player }) {
               ref={(el) => {
                 boids[i].ref = el;
               }}
-              airshipRefs={airships}
               key={`${i}boid`}
             />
         ))}

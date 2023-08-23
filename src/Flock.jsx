@@ -12,7 +12,7 @@ if(window.innerWidth < 500) {
 
 const boids = new Array(_NUM_BOIDS).fill(null).map(() => new Boid());
 
-export function Flock() {
+export function Flock({airships}) {
   useFrame(() => {
     let i = boids.length;
     while (i--) {
@@ -42,13 +42,13 @@ export function Flock() {
       >
         {boids.map(({ position, velocity }, i) => (
             <Instance
-              scale={[.15, .15, .15]}
               position={[position.x, position.y, position.z]}
               rotation={[MathUtils.degToRad(180), MathUtils.degToRad(90) ,MathUtils.degToRad(90)]}
               velocity={velocity}
               ref={(el) => {
                 boids[i].ref = el;
               }}
+              airshipRefs={airships}
               key={`${i}boid`}
             />
         ))}

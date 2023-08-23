@@ -10,9 +10,9 @@ export class Boid {
     
       // const spread = _NUM_BOIDS / 2;
       this.position = new THREE.Vector3(
-        THREE.MathUtils.randFloat(- 20, 20),
+        THREE.MathUtils.randFloat(- 150, 150),
         THREE.MathUtils.randFloat(- 120, 120),
-        THREE.MathUtils.randFloat(- 20, 20),
+        THREE.MathUtils.randFloat(- 150, 150),
       );
   
   
@@ -20,14 +20,14 @@ export class Boid {
       this.maxForce = 0.04;
       this.safeDistance = 80;
   
-      this.cohesionPerception = 10;
-      this.separationPerception = 13;
-      this.alignmentPerception = 15;
+      this.cohesionPerception = 20;
+      this.separationPerception = 26;
+      this.alignmentPerception = 30;
       this.cohesionStrength = 0.5;
       this.alignmentStrength = 1;
       this.separationStrength = 2;
       this.collisionSafeDistance = 160;
-      this.boundary = 250;
+      this.boundary = 500;
       if (window.innerWidth < 500) {
         this.boundary = 250;
       }
@@ -138,10 +138,10 @@ export class Boid {
       const steering = this.calculateSteeringForces(boids);
       // const playerSteering = this.calculateSteeringForces([playerRef.current]);
       const boundary = this.boundaryCollision();
-      // const collision = this.collision(this.ref.airshipRefs.current);
+      const collision = this.collision(this.ref.airshipRefs.current);
       // const groundAvoidance = this.groundAvoidance();
-      // collision.multiplyScalar(this.separationStrength * 2);
-      // groundAvoidance.multiplyScalar(this.separationStrength);
+      collision.multiplyScalar(this.separationStrength * 4);
+      // groundAvoidance.multiplyScalar(this.separationStrength / 2);
       boundary.multiplyScalar(this.separationStrength);
   
       this.acceleration
@@ -152,7 +152,7 @@ export class Boid {
       // Preferentially move in x/z dimension
       this.acceleration.multiply(new THREE.Vector3(1, 0.5, 1));
       this.acceleration
-        // .add(collision)
+        .add(collision)
         // .add(groundAvoidance);
   
     }
@@ -171,17 +171,17 @@ export class Boid {
       return steer;
     }
   
-    // groundAvoidance() {
+    groundAvoidance() {
   
-    //   let force = new THREE.Vector3(0, 0, 0);
+      let force = new THREE.Vector3(0, 0, 0);
   
-    //   if (this.position.y < 15) {
-    //     force = new THREE.Vector3(0, 15 - this.position.y, 0);
-    //   }
+      if (this.position.y < 15) {
+        force = new THREE.Vector3(0, 15 - this.position.y, 0);
+      }
   
-    //   return force;
+      return force;
   
-    // }
+    }
   
     separate(boids) {
       const steer = new THREE.Vector3();
@@ -272,26 +272,26 @@ export class Boid {
   
     }
   
-    // collision(colliders) {
-    //   const ray = new THREE.Ray(this.position, this.velocity);
-    //   const force = new THREE.Vector3(0, 0, 0);
+    collision(colliders) {
+      const ray = new THREE.Ray(this.position, this.velocity);
+      const force = new THREE.Vector3(0, 0, 0);
   
-    //   for (const c of colliders) {
-    //     const dist = this.position.distanceTo(c.position)
-    //     if (dist > this.collisionSafeDistance) {
-    //       continue;
-    //     }
+      for (const c of colliders) {
+        const dist = this.position.distanceTo(c.position)
+        if (dist > this.collisionSafeDistance) {
+          continue;
+        }
         
-    //     const result = ray.intersectBox(c.AABB, new THREE.Vector3());
-    //     if (result) {
-    //       const dirToCenter = c.position.clone().sub(this.position).normalize();
-    //       const dirToCollision = result.clone().sub(this.position).normalize();
-    //       const steeringDirection = dirToCollision.sub(dirToCenter).normalize().multiplyScalar(1/dist);
-    //       force.add(steeringDirection);
-    //     }
-    //   }
-    //   return force;
-    // }
+        const result = ray.intersectBox(c.AABB, new THREE.Vector3());
+        if (result) {
+          const dirToCenter = c.position.clone().sub(this.position).normalize();
+          const dirToCollision = result.clone().sub(this.position).normalize();
+          const steeringDirection = dirToCollision.sub(dirToCenter).normalize().multiplyScalar(1/dist);
+          force.add(steeringDirection);
+        }
+      }
+      return force;
+    }
     
     boundaryCollision() {
   

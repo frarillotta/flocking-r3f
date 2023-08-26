@@ -53,7 +53,7 @@ export default function App() {
       >
       <Stats />
         <OrbitControls
-          maxDistance={1250}
+          maxDistance={1500}
           maxPolarAngle={Math.PI/2}
           maxAzimuthAngle={Math.PI/4}
         />

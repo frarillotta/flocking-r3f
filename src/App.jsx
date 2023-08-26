@@ -1,6 +1,6 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
-import { Stats } from "@react-three/drei";
+import { Stats, OrbitControls } from "@react-three/drei";
 import {Color} from "three";
 import { Flock } from "./Flock";
 import { Terrain } from "./Terrain";
@@ -21,9 +21,9 @@ function SceneElements() {
   const airshipRefs = useRef([]);
   return (
     <>
-      <Player ref={playerRef}/>
-      <Terrain player={playerRef}/>
-      <Flock player={playerRef} airships={airshipRefs} />
+      {/* <Player ref={playerRef}/>*/}
+      <Terrain /> 
+      <Flock airships={airshipRefs} />
       {new Array(AIRSHIPS_COUNT).fill(null).map((_, i) => 
           <Airship key={`airship${i}`} ref={(el) => {
           // not very elegant, i know
@@ -34,7 +34,7 @@ function SceneElements() {
         }} position={[
           //distribute them in circles as to avoid collision - i hope that works
           Math.cos(Math.random() * Math.PI * 2) * ((i + 2) * 80),
-          THREE.MathUtils.randInt(100, 200),
+          THREE.MathUtils.randInt(50, 150),
           Math.sin(Math.random() * Math.PI * 2) * ((i + 2) * 80),
         ]}
           rotation-y={THREE.MathUtils.degToRad(THREE.MathUtils.randInt(0, 360))}
@@ -48,16 +48,15 @@ export default function App() {
   return (
     <>    
       <Canvas
-        camera={{ near: 0.6, far: 4010, fov: 26, position: [0, 100, 0] } }
+        camera={{ near: 20, far: 99999999, fov: 30, position: [500, 500, 0] } }
         dpr={1}
       >
       <Stats />
-        {/* <OrbitControls
-          enableDamping={true}
-          enablePan={false}
-          enableRotate={true}
-          enableZoom={false}
-        /> */}
+        <OrbitControls
+          maxDistance={1250}
+          maxPolarAngle={Math.PI/2}
+          maxAzimuthAngle={Math.PI/4}
+        />
         <ambientLight intensity={0.5} />
         <spotLight  position={[2000, 200, 2000]} intensity={2}/>
         <directionalLight position={[-2000, 100, -2000]} intensity={1}/>

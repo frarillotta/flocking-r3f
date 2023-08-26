@@ -3,31 +3,30 @@ import { MathUtils } from 'three';
 
 const degToRad270 = MathUtils.degToRad(270);
 export class Boid {
-    constructor() {
+    constructor(controls) {
       this.acceleration = new THREE.Vector3();
       this.angle = THREE.MathUtils.randFloat(- Math.PI * 2, Math.PI * 2);
       this.velocity = new THREE.Vector3(Math.cos(this.angle), 0, Math.sin(this.angle))
     
       // const spread = _NUM_BOIDS / 2;
       this.position = new THREE.Vector3(
-        THREE.MathUtils.randFloat(- 20, 20),
+        THREE.MathUtils.randFloat(- 150, 150),
         THREE.MathUtils.randFloat(- 120, 120),
-        THREE.MathUtils.randFloat(- 20, 20),
+        THREE.MathUtils.randFloat(- 150, 150),
       );
-  
-  
-      this.maxSpeed = 2;
-      this.maxForce = 0.04;
-      this.safeDistance = 80;
-  
-      this.cohesionPerception = 25;
-      this.separationPerception = 15;
-      this.alignmentPerception = 20;
-      this.cohesionStrength = 1;
-      this.alignmentStrength = 1;
-      this.separationStrength = 2;
+
+      this.controls = controls;
+      this.maxSpeed = controls.maxSpeed;
+      this.maxForce = controls.maxForce;
+      this.cohesionPerception = controls.cohesionPerception;
+      this.separationPerception = controls.separationPerception;
+      this.alignmentPerception = controls.alignmentPerception;
+      this.cohesionStrength = controls.cohesionStrength;
+      this.alignmentStrength = controls.alignmentStrength;
+      this.separationStrength = controls.separationStrength;
+
       this.collisionSafeDistance = 160;
-      this.boundary = 400;
+      this.boundary = 500;
       if (window.innerWidth < 500) {
         this.boundary = 250;
       }
@@ -35,12 +34,12 @@ export class Boid {
   
   
     update() {
-  
+      
       this.velocity.add(this.acceleration);
   
-      if (this.velocity.length() > this.maxSpeed) {
+      if (this.velocity.length() > this.maxSpeed.value) {
         this.velocity.normalize();
-        this.velocity.multiplyScalar(this.maxSpeed);
+        this.velocity.multiplyScalar(this.maxSpeed.value);
       }
   
       this.position.add(this.velocity);
@@ -74,7 +73,7 @@ export class Boid {
         if (boids[i] !== this) {
           const d = this.position.distanceTo(boids[i].position);
   
-          if (d > 0 && d < this.separationPerception) {
+          if (d > 0 && d < this.separationPerception.value) {
             const diff = this.position.clone().sub(boids[i].position);
             diff.normalize();
             diff.divideScalar(d);
@@ -82,12 +81,12 @@ export class Boid {
             separationCount++;
           }
   
-          if (d > 0 && d < this.alignmentPerception) {
+          if (d > 0 && d < this.alignmentPerception.value) {
             alignment.add(boids[i].velocity ?? new THREE.Vector3());
             alignmentCount++;
           }
   
-          if (d > 0 && d < this.cohesionPerception) {
+          if (d > 0 && d < this.cohesionPerception.value) {
             cohesion.add(boids[i].position);
             cohesionCount++;
           }
@@ -100,24 +99,24 @@ export class Boid {
       }
       if (separation.length() > 0 ) {
         separation.normalize();
-        separation.multiplyScalar(this.maxSpeed);
+        separation.multiplyScalar(this.maxSpeed.value);
         separation.sub(this.velocity);
       }
           
-      if (separation.length() > this.maxForce) {
+      if (separation.length() > this.maxForce.value) {
         separation.normalize();
-        separation.multiplyScalar(this.maxForce);
+        separation.multiplyScalar(this.maxForce.value);
       }
   
       if (alignmentCount > 0) {
         alignment.divideScalar(alignmentCount);
         alignment.normalize();
-        alignment.multiplyScalar(this.maxSpeed);
+        alignment.multiplyScalar(this.maxSpeed.value);
         const steer = alignment.clone().sub(this.velocity);
               
-        if (steer.length() > this.maxForce) {
+        if (steer.length() > this.maxForce.value) {
           steer.normalize();
-          steer.multiplyScalar(this.maxForce);
+          steer.multiplyScalar(this.maxForce.value);
         }
         alignment = steer;
       }
@@ -126,47 +125,46 @@ export class Boid {
         cohesion = this.seek(cohesion);
       }
       
-      separation.multiplyScalar(this.separationStrength);
-      alignment.multiplyScalar(this.alignmentStrength);
-      cohesion.multiplyScalar(this.cohesionStrength);
+      separation.multiplyScalar(this.separationStrength.value);
+      alignment.multiplyScalar(this.alignmentStrength.value);
+      cohesion.multiplyScalar(this.cohesionStrength.value);
   
       return separation.add(alignment).add(cohesion);
   
     }
-    flock(boids, playerRef) {
-  
+    flock(boids) {
       const steering = this.calculateSteeringForces(boids);
-      const playerSteering = this.calculateSteeringForces([playerRef.current]);
+      // const playerSteering = this.calculateSteeringForces([playerRef.current]);
       const boundary = this.boundaryCollision();
       const collision = this.collision(this.ref.airshipRefs.current);
-      const groundAvoidance = this.groundAvoidance();
-      collision.multiplyScalar(this.separationStrength * 2);
-      groundAvoidance.multiplyScalar(this.separationStrength);
-      boundary.multiplyScalar(this.separationStrength);
+      // const groundAvoidance = this.groundAvoidance();
+      collision.multiplyScalar(this.separationStrength.value * 10);
+      // groundAvoidance.multiplyScalar(this.separationStrength.value / 2);
+      boundary.multiplyScalar(this.separationStrength.value);
   
       this.acceleration
         .add(steering)
-        .add(playerSteering)
+        // .add(playerSteering)
         .add(boundary)
       
       // Preferentially move in x/z dimension
       this.acceleration.multiply(new THREE.Vector3(1, 0.5, 1));
       this.acceleration
         .add(collision)
-        .add(groundAvoidance);
+        // .add(groundAvoidance);
   
     }
   
     seek(target) {
       const desired = target.clone().sub(this.position);
       desired.normalize();
-      desired.multiplyScalar(this.maxSpeed);
+      desired.multiplyScalar(this.maxSpeed.value);
   
       const steer = desired.sub(this.velocity);
       
-      if (steer.length() > this.maxForce) {
+      if (steer.length() > this.maxForce.value) {
         steer.normalize();
-        steer.multiplyScalar(this.maxForce);
+        steer.multiplyScalar(this.maxForce.value);
       }
       return steer;
     }
@@ -192,7 +190,7 @@ export class Boid {
         if (boids[i] !== this) {
           const d = this.position.distanceTo(boids[i].position);
   
-          if (d > 0 && d < this.separationPerception) {
+          if (d > 0 && d < this.separationPerception.value) {
             const diff = this.position.clone().sub(boids[i].position);
             diff.normalize();
             diff.divideScalar(d);
@@ -206,13 +204,13 @@ export class Boid {
       }
       if (steer.length() > 0 ) {
         steer.normalize();
-        steer.multiplyScalar(this.maxSpeed);
+        steer.multiplyScalar(this.maxSpeed.value);
         steer.sub(this.velocity);
       }
           
-      if (steer.length() > this.maxForce) {
+      if (steer.length() > this.maxForce.value) {
         steer.normalize();
-        steer.multiplyScalar(this.maxForce);
+        steer.multiplyScalar(this.maxForce.value);
       }
       return steer;
     }
@@ -225,7 +223,7 @@ export class Boid {
       while (i--) {
         if (boids[i] !== this) {
           const d = this.position.distanceTo(boids[i].position);
-          if (d > 0 && d < this.alignmentPerception) {
+          if (d > 0 && d < this.alignmentPerception.value) {
             sum.add(boids[i].velocity);
             count++;
           }
@@ -235,12 +233,12 @@ export class Boid {
       if (count > 0) {
         sum.divideScalar(count);
         sum.normalize();
-        sum.multiplyScalar(this.maxSpeed);
+        sum.multiplyScalar(this.maxSpeed.value);
         const steer = sum.clone().sub(this.velocity);
               
-        if (steer.length() > this.maxForce) {
+        if (steer.length() > this.maxForce.value) {
           steer.normalize();
-          steer.multiplyScalar(this.maxForce);
+          steer.multiplyScalar(this.maxForce.value);
         }
         return steer;
       } else {
@@ -256,7 +254,7 @@ export class Boid {
       while (i--) {
         if (boids[i] !== this) {
           const d = this.position.distanceTo(boids[i].position);
-          if (d > 0 && d < this.cohesionPerception) {
+          if (d > 0 && d < this.cohesionPerception.value) {
             sum.add(boids[i].position);
             count++;
           }
@@ -298,9 +296,14 @@ export class Boid {
       const distance = this.boundary - this.position.length() - 1;
   
       const steerVector = this.position.clone();
-      steerVector.normalize();
-      steerVector.multiplyScalar(-1 / (Math.pow(distance, 2)));
-      steerVector.multiplyScalar(Math.pow(this.velocity.length(), 3));
+      // if (distance < 200) {
+
+        steerVector.normalize();
+        steerVector.multiplyScalar(-1 / (Math.pow(distance, 2)));
+        // steerVector.add(this.position.add(new THREE.Vector3(1, 1, 1)));
+        steerVector.multiplyScalar(Math.pow(this.velocity.length(), 3));
+        
+      // }
       return steerVector;
     }
   

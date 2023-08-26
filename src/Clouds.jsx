@@ -5,8 +5,8 @@ import { Image } from '@react-three/drei'
 
 //Vars
 const CLOUD_VERTICAL_POSITION = {
-    min: 150,
-    max: 300
+    min: 400,
+    max: 1000
 };
 
 const CLOUD_SCALE = {

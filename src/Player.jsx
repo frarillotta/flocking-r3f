@@ -43,51 +43,63 @@ export const Player = forwardRef((_, ref) => {
       .add(ref.current.position);
     const _idealLookAt = ref.current.position.clone().lerp(idealLookAt, 0.5);
     state.camera.position.lerp(idealCameraPosition, 0.1);
+    // state.camera.up.set(ref.current.up.x,ref.current.up.y, ref.current.up.z);
     state.camera.lookAt(_idealLookAt);
+    
+    // state.camera.rotation.z = ref.current.rotation.z;
+    // state.camera.rotation.x = -ref.current.rotation.x;
+    // state.camera.rotation.y = -ref.current.rotation.y;
     //TODO: fix these stupid angles
     if (controls.current.forward) {
-      ref.current.rotation.x = MathUtils.lerp(
-        ref.current.rotation.x,
-        ref.current.rotation.x - 0.11,
-        0.4
-      );
+      // ref.current.rotation.x = MathUtils.lerp(
+      //   ref.current.rotation.x,
+      //   ref.current.rotation.x - 0.11,
+      //   0.4
+      // );
+      ref.current.rotateOnWorldAxis(new Vector3(-1 ,0, 0), .05)
     }
     if (controls.current.backward) {
-      ref.current.rotation.x = MathUtils.lerp(
-        ref.current.rotation.x,
-        ref.current.rotation.x + 0.11,
-        0.4
-      );
+      // ref.current.rotation.x = MathUtils.lerp(
+      //   ref.current.rotation.x,
+      //   ref.current.rotation.x + 0.11,
+      //   0.4
+      // );
+      ref.current.rotateOnWorldAxis(new Vector3(-1 ,0, 0), -.05)
+
     }
     if (controls.current.left) {
-      ref.current.rotation.y = MathUtils.lerp(
-        ref.current.rotation.y,
-        ref.current.rotation.y + 0.11,
-        0.4
-      );
+      // ref.current.rotation.y = MathUtils.lerp(
+      //   ref.current.rotation.y,
+      //   ref.current.rotation.y + 0.11,
+      //   0.4
+      // );
+      ref.current.rotateOnWorldAxis(new Vector3(0, 1, 0), .05)
     }
     if (controls.current.right) {
-      ref.current.rotation.y = MathUtils.lerp(
-        ref.current.rotation.y,
-        ref.current.rotation.y - 0.11,
-        0.4
-      );
+      // ref.current.rotation.y = MathUtils.lerp(
+      //   ref.current.rotation.y,
+      //   ref.current.rotation.y - 0.11,
+      //   0.4
+      // );
+      
+      ref.current.rotateOnWorldAxis(new Vector3(0, 1, 0), -.05)
     }
-    if (controls.current.rightSide) {
-      ref.current.rotation.z = MathUtils.lerp(
-        ref.current.rotation.z,
-        ref.current.rotation.z - 0.11,
-        0.4
-      );
-    }
-    if (controls.current.leftSide) {
-      ref.current.rotation.z = MathUtils.lerp(
-        ref.current.rotation.z,
-        ref.current.rotation.z + 0.11,
-        0.4
-      );
-    }
-    if (!controls.current.stop) {
+    // if (controls.current.rightSide) {
+    //   ref.current.rotation.z = MathUtils.lerp(
+    //     ref.current.rotation.z,
+    //     ref.current.rotation.z - 0.11,
+    //     0.4
+    //   );
+    // }
+    // if (controls.current.leftSide) {
+    //   ref.current.rotation.z = MathUtils.lerp(
+    //     ref.current.rotation.z,
+    //     ref.current.rotation.z + 0.11,
+    //     0.4
+    //   );
+    // }
+    console.log(ref.current.rotation)
+    if (controls.current.stop) {
       // forward movement
       const worldDirection = new Vector3();
       ref.current.getWorldDirection(worldDirection);
@@ -120,4 +132,4 @@ export const Player = forwardRef((_, ref) => {
 })
 
 
-useGLTF.preload('/globe.glb')
+

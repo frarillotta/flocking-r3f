@@ -7,16 +7,15 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@react-three/drei": "^9.80.6",
-    "@react-three/fiber": "^8.13.7",
-    "@react-three/postprocessing": "^2.15.1",
-    "@types/three": "^0.155.1",
+    "@react-three/drei": "^9.36.0",
+    "@react-three/fiber": "^8.8.10",
+    "@react-three/postprocessing": "^2.7.0",
+    "@types/three": "^0.144.0",
     "glslify": "^7.1.1",
     "leva": "^0.9.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.155.0",
-    "three-mesh-bvh": "^0.6.3"
+    "three": "^0.145.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.4",

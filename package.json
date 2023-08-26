@@ -12,6 +12,7 @@
     "@react-three/postprocessing": "^2.15.1",
     "@types/three": "^0.155.1",
     "glslify": "^7.1.1",
+    "leva": "^0.9.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.155.0",

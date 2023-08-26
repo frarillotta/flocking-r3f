@@ -73,10 +73,8 @@ export const Terrain = () => {
 	}, []);
 	return (
 		<mesh
-			receiveShadow={true}
-			castShadow
 			rotation={[Math.PI / 2, Math.PI, 0]}
-			position={[0, -400, 0]}
+			position={[0, -500, 0]}
 			ref={groundRef}
 		>
 			<planeGeometry args={[TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_RESOLUTION, TERRAIN_RESOLUTION]} />

@@ -48,18 +48,21 @@ export default function App() {
   return (
     <>    
       <Canvas
-        camera={{ near: 0.6, far: 99999999, fov: 26, position: [100, 500, 0] } }
+        camera={{ near: 20, far: 99999999, fov: 30, position: [500, 500, 0] } }
         dpr={1}
       >
       <Stats />
         <OrbitControls
+          maxDistance={1250}
+          maxPolarAngle={Math.PI/2}
+          maxAzimuthAngle={Math.PI/4}
         />
         <ambientLight intensity={0.5} />
         <spotLight  position={[2000, 200, 2000]} intensity={2}/>
         <directionalLight position={[-2000, 100, -2000]} intensity={1}/>
         <Suspense fallback={null}>
           {/* <Environment preset="park"/> */}
-          {/* <PostEffects /> */}
+          <PostEffects />
           <SceneElements />
           <Clouds />
         </Suspense>

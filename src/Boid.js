@@ -16,18 +16,16 @@ export class Boid {
       );
   
   
-      this.maxSpeed = 2;
-      this.maxForce = 0.04;
-      this.safeDistance = 80;
-  
-      this.cohesionPerception = 25;
-      this.separationPerception = 15;
-      this.alignmentPerception = 20;
-      this.cohesionStrength = 1;
-      this.alignmentStrength = 1;
-      this.separationStrength = 2;
+      this.maxSpeed = 3;
+      this.maxForce = 0.04;  
+      this.cohesionPerception = 100;
+      this.separationPerception = 17;
+      this.alignmentPerception = 25;
+      this.cohesionStrength = 0.36;
+      this.alignmentStrength = 2;
+      this.separationStrength = 5;
       this.collisionSafeDistance = 160;
-      this.boundary = 400;
+      this.boundary = 500;
       if (window.innerWidth < 500) {
         this.boundary = 250;
       }
@@ -141,7 +139,7 @@ export class Boid {
       const collision = this.collision(this.ref.airshipRefs.current);
       const groundAvoidance = this.groundAvoidance();
       collision.multiplyScalar(this.separationStrength * 2);
-      groundAvoidance.multiplyScalar(this.separationStrength);
+      groundAvoidance.multiplyScalar(this.separationStrength / 3);
       boundary.multiplyScalar(this.separationStrength);
   
       this.acceleration
@@ -169,18 +167,6 @@ export class Boid {
         steer.multiplyScalar(this.maxForce);
       }
       return steer;
-    }
-  
-    groundAvoidance() {
-  
-      let force = new THREE.Vector3(0, 0, 0);
-  
-      if (this.position.y < 15) {
-        force = new THREE.Vector3(0, 15 - this.position.y, 0);
-      }
-  
-      return force;
-  
     }
   
     separate(boids) {
@@ -293,6 +279,18 @@ export class Boid {
       return force;
     }
     
+    groundAvoidance() {
+  
+      let force = new THREE.Vector3(0, 0, 0);
+  
+      if (this.position.y < 10) {
+        force = new THREE.Vector3(0, 10 - this.position.y, 0);
+      }
+  
+      return force;
+  
+    }
+  
     boundaryCollision() {
   
       const distance = this.boundary - this.position.length() - 1;

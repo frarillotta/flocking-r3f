@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 
 export function useKeyPress(target, event) {
   useEffect(() => {
-    const downHandler = ({ key }) => target.indexOf(key) !== -1 && event(true)
-    const upHandler = ({ key }) => target.indexOf(key) !== -1 && event(false)
+    const downHandler = ({ code }) => target.indexOf(code) !== -1 && event(true)
+    const upHandler = ({ code }) => target.indexOf(code) !== -1 && event(false)
     window.addEventListener('keydown', downHandler)
     window.addEventListener('keyup', upHandler)
     return () => {
@@ -20,18 +20,20 @@ export function useControls() {
     left: false, 
     right: false, 
     accelerate: false, 
-    leftSide: false,
-    rightSide: false,
+    leftJaw: false,
+    rightJaw: false,
     stop: false,
+    reset: false,
 })
-  useKeyPress(['w'], (pressed) => (keys.current.forward = pressed))
-  useKeyPress(['s'], (pressed) => (keys.current.backward = pressed))
-  useKeyPress(['a'], (pressed) => (keys.current.left = pressed))
-  useKeyPress(['d'], (pressed) => (keys.current.right = pressed))
-  useKeyPress([' '], (pressed) => (keys.current.accelerate = pressed))
-  useKeyPress(['e'], (pressed) => (keys.current.leftSide = pressed))
-  useKeyPress(['q'], (pressed) => (keys.current.rightSide = pressed))
-  useKeyPress(['z'], (pressed) => (keys.current.stop = pressed))
+  useKeyPress(['KeyW'], (pressed) => (keys.current.forward = pressed))
+  useKeyPress(['KeyS'], (pressed) => (keys.current.backward = pressed))
+  useKeyPress(['KeyA'], (pressed) => (keys.current.left = pressed))
+  useKeyPress(['KeyD'], (pressed) => (keys.current.right = pressed))
+  useKeyPress(['ShiftLeft'], (pressed) => (keys.current.accelerate = pressed))
+  useKeyPress(['KeyE'], (pressed) => (keys.current.leftJaw = pressed))
+  useKeyPress(['KeyQ'], (pressed) => (keys.current.rightJaw = pressed))
+  useKeyPress(['Space'], (pressed) => (keys.current.stop = pressed))
+  useKeyPress(['KeyR'], (pressed) => (keys.current.reset = pressed))
 
   return keys
 }

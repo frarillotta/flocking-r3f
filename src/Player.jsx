@@ -10,11 +10,11 @@ function easeOutQuad(x) {
   return 1 - (1 - x) * (1 - x);
 }
 
-let maxVelocity = 3;
+let maxVelocity = 5;
 let jawVelocity = 0;
 let pitchVelocity = 0;
 let tiltVelocity = 0;
-let planeSpeed = 1.5;
+let planeSpeed = 3;
 let turbo = 0;
 
 function updatePlaneAxis(x, y, z, planePosition, camera, controls) {
@@ -85,7 +85,7 @@ function updatePlaneAxis(x, y, z, planePosition, camera, controls) {
 
   // plane position & velocity
   if (controls.accelerate) {
-    turbo += 0.25;
+    turbo += 0.1;
   } else {
     turbo *= 0.95;
   }
@@ -135,7 +135,7 @@ export const Player = forwardRef((_, ref) => {
     var quaternionB = new Quaternion();
     quaternionB.setFromRotationMatrix(rotMatrix);
 
-    var interpolationFactor = 0.75;
+    var interpolationFactor = 0.25;
     var interpolatedQuaternion = new Quaternion().copy(quaternionA);
     interpolatedQuaternion.slerp(quaternionB, interpolationFactor);
     delayedQuaternion.copy(interpolatedQuaternion);

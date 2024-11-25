@@ -17,11 +17,11 @@ let tiltVelocity = 0;
 let planeSpeed = 3;
 let turbo = 0;
 
-function updatePlaneAxis(x, y, z, planePosition, camera, controls) {
+function updatePlaneAxis(x, y, z, planePosition, camera, controls, delta) {
   jawVelocity *= 0.95;
   pitchVelocity *= 0.95;
   tiltVelocity *= 0.95;
-  let speed = planeSpeed;
+  let speed = planeSpeed * delta * 60;
   if (Math.abs(jawVelocity) > maxVelocity) 
     jawVelocity = Math.sign(jawVelocity) * maxVelocity;
 
@@ -110,10 +110,9 @@ const delayedQuaternion = new Quaternion();
 export const Player = forwardRef((_, ref) => {
 
   const { nodes, materials } = useGLTF('/globe.glb');
-  const speed = useRef(INITIAL_SPEED);
   const controls = useControls();
-  useFrame(({ camera }) => {
-    updatePlaneAxis(x, y, z, planePosition, camera, controls.current);
+  useFrame(({ camera }, delta) => {
+    updatePlaneAxis(x, y, z, planePosition, camera, controls.current, delta);
 
     const rotMatrix = new Matrix4().makeBasis(x, y, z);
     
@@ -158,8 +157,8 @@ export const Player = forwardRef((_, ref) => {
 
   return ( 
     <Trail
-      width={1}
-      length={0.5}
+      width={2}
+      length={1.5}
       color={'#F8D628'}
       attenuation={(t) => {
         return t * t

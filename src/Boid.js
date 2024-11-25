@@ -18,8 +18,8 @@ export class Boid {
   
       this.maxSpeed = 3;
       this.maxForce = 0.04;  
-      this.cohesionPerception = 100;
-      this.separationPerception = 17;
+      this.cohesionPerception = 50;
+      this.separationPerception = 20;
       this.alignmentPerception = 25;
       this.cohesionStrength = 0.36;
       this.alignmentStrength = 2;
@@ -32,15 +32,16 @@ export class Boid {
     }
   
   
-    update() {
+    update(delta) {
   
       this.velocity.add(this.acceleration);
-  
-      if (this.velocity.length() > this.maxSpeed) {
+      const maxSpeed = this.maxSpeed * (delta * 60)
+
+      if (this.velocity.length() > maxSpeed) {
         this.velocity.normalize();
-        this.velocity.multiplyScalar(this.maxSpeed);
+        this.velocity.multiplyScalar(maxSpeed);
       }
-  
+
       this.position.add(this.velocity);
       const matrix = new THREE.Matrix4();
       matrix.lookAt(

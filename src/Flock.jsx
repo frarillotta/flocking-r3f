@@ -13,11 +13,11 @@ if (window.innerWidth < 500) {
 const boids = new Array(_NUM_BOIDS).fill(null).map(() => new Boid());
 
 export function Flock({ airships, player }) {
-  useFrame(() => {
+  useFrame((_, delta) => {
     let i = boids.length;
     while (i--) {
       boids[i].flock(boids, player);
-      boids[i].update();
+      boids[i].update(delta);
     }
   });
   const { nodes, materials, animations } = useGLTF('/bird.glb');

@@ -97,7 +97,7 @@ function updatePlaneAxis(x, y, z, planePosition, camera, controls, delta) {
   camera.fov = 40 + turboSpeed * 900;
   camera.updateProjectionMatrix();
 
-  planePosition.add(z.clone().multiplyScalar(-speed -turboSpeed));
+  planePosition.add(z.clone().multiplyScalar(-speed - (turboSpeed * 100)));
 }
 
 const x = new Vector3(1, 0, 0);

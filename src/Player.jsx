@@ -18,10 +18,11 @@ let planeSpeed = 3;
 let turbo = 0;
 
 function updatePlaneAxis(x, y, z, planePosition, camera, controls, delta) {
-  jawVelocity *= 0.95;
-  pitchVelocity *= 0.95;
-  tiltVelocity *= 0.95;
-  let speed = planeSpeed * delta * 1500;
+  const multiplier = delta < 0.01 ? 0.85 : 1
+  jawVelocity *= 0.95 * multiplier;
+  pitchVelocity *= 0.95 * multiplier;
+  tiltVelocity *= 0.95 * multiplier;
+  let speed = planeSpeed * multiplier / 2.5;
   if (Math.abs(jawVelocity) > maxVelocity) 
     jawVelocity = Math.sign(jawVelocity) * maxVelocity;
 
@@ -112,8 +113,7 @@ export const Player = forwardRef((_, ref) => {
   const { nodes, materials } = useGLTF('/globe.glb');
   const speed = useRef(INITIAL_SPEED);
   const controls = useControls();
-  useFrame(({ camera, clock }) => {
-    const delta = clock.getDelta();
+  useFrame(({ camera }, delta) => {
     updatePlaneAxis(x, y, z, planePosition, camera, controls.current, delta);
 
     const rotMatrix = new Matrix4().makeBasis(x, y, z);
